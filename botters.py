@@ -19,8 +19,10 @@ async def on_message(message):
         return
 
     if message.content.startswith('!help'):
+
         msg = '''Currently this bot is only for overall fortnite stats. To use type: !stats `gamertag` message @Ryan.H for info, he is my overlord.
         '''
+
         await client.send_message(message.channel,msg)
     if message.content.split()[0]=='!stats':
 
