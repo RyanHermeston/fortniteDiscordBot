@@ -20,7 +20,7 @@ async def on_message(message):
 
     if message.content.startswith('!help'):
         msg = '''Currently this bot is only for overall fortnite stats. To use type: !stats `gamertag` message @Ryan.H for info, he is my overlord.
-        To turn off, type, !kill, however know that only @Ryan.H can turn me on ( ͡° ͜ʖ ͡°) '''
+        '''
         await client.send_message(message.channel,msg)
     if message.content.split()[0]=='!stats':
 
@@ -37,7 +37,7 @@ async def on_message(message):
             kd = data['lifeTimeStats'][11]['value']
             wins = data['lifeTimeStats'][8]['value']
             matchesPlayed = data['lifeTimeStats'][7]['value']
-            winrate = int(matchesPlayed)/int(wins)
+            winrate = int(wins)/int(matchesPlayed)
             winrate=  str(int(winrate))
             #overall data above, current below, quick and dirty but is close to accurate
 
@@ -77,10 +77,7 @@ async def on_message(message):
             msg = 'Failed, make sure name is spelled right'
         await client.send_message(message.channel,msg)
 
-    if message.content.startswith("!kill"):
-        msg= "I've been ended"
-        await client.send_message(message.channel, msg)
-        sys.exit()
+
 
 
 @client.event
