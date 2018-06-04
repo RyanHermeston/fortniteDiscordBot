@@ -63,13 +63,15 @@ async def on_message(message):
 
             msg = name+"\nOverall:\t\t\t\t Current:\nkd: "+kd+"\t\t\t\t kd: "+str(s4kd)+"\nwins: "+wins+"\t\t\t\t wins:"+str(s4wins)+"\nmatches: "+matchesPlayed+'\t\tmatches: '+ str(s4matches)+'\nwinrate: '+winrate+'%\t\t winrate: ' +str(s4winRate)+'%'
 
-            if (kd) < '1':
+            kd = float(kd)
+
+            if (kd) < 1.0:
                 msg+= '\nstatus: no skin'
-            elif (kd) > '1' and kd<'2':
+            elif (kd) > 1.0 and kd<2.0:
                 msg+= '\nstatus: regular shmuck'
-            elif (kd) > '2' and kd <'3':
+            elif (kd) > 2.0 and kd <3.0:
                 msg+= '\nstatus: dark knight'
-            elif (kd) > '3':
+            elif (kd) > 3.0:
                 msg+='\nstatus: streamer'
             else:
                 msg+= '\nstatus: no idea'
