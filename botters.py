@@ -36,13 +36,19 @@ async def on_message(message):
         try:
             r = requests.get(url = URL,headers=key)
             data = r.json()
+
+
             overallKd = data['lifeTimeStats'][11]['value']
             overallWins = data['lifeTimeStats'][8]['value']
             overallMatchesPlayed = data['lifeTimeStats'][7]['value']
             overallWinrate = int(overallWins)/int(overallMatchesPlayed)*100
             overallWinrate=  str(int(overallWinrate))
+        except:
+            msg = 'Failed to gather any stats for '+name
+            await client.send_message(message.channel,msg)
+            return
             #overall data above, current below, quick and dirty but is close to accurate
-
+        try:
             currKills = int(data['stats']['curr_p9']['kills']['value'])+int(data['stats']['curr_p10']['kills']['value'])+int(data['stats']['curr_p2']['kills']['value'])
 
 
@@ -58,7 +64,14 @@ async def on_message(message):
             currKd = round(currKills/(currMatches-int(currWins)),2)
             #vars are overallWinrate,matches,overallWins,overallKd
             #print(str(currWinRate)+'%\n'+str(currMatches)+'\n'+str(currWins)+'\n'+str(currKd))
+        except:
+            msg = ':( failed to gather current info for '+name
+            msg+=' only overall stats will be displayed.\n'
+            msg+="kd: "+overallKd+'\n'+"wins: "+overallWins+'\n'+"matches: "+overallMatchesPlayed+'\n'+"winrate: "+overallWinrate+"%"
+            await client.send_message(message.channel,msg)
+            return
 
+        try:
 
             msg = name.center(37)
             fir,sec,thrd,frth,fith = '','','','',''
@@ -87,7 +100,7 @@ async def on_message(message):
 
 
         except:
-            msg = 'Failed to retrieve'
+            msg = 'Failed during msg creation'
         await client.send_message(message.channel,msg)
 
 
