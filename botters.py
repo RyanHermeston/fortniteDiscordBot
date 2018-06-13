@@ -36,49 +36,58 @@ async def on_message(message):
         try:
             r = requests.get(url = URL,headers=key)
             data = r.json()
-            kd = data['lifeTimeStats'][11]['value']
-            wins = data['lifeTimeStats'][8]['value']
-            matchesPlayed = data['lifeTimeStats'][7]['value']
-            winrate = int(wins)/int(matchesPlayed)*100
-            winrate=  str(int(winrate))
+            overallKd = data['lifeTimeStats'][11]['value']
+            overallWins = data['lifeTimeStats'][8]['value']
+            overallMatchesPlayed = data['lifeTimeStats'][7]['value']
+            overallWinrate = int(overallWins)/int(overallMatchesPlayed)*100
+            overallWinrate=  str(int(overallWinrate))
             #overall data above, current below, quick and dirty but is close to accurate
 
-            s4kills = int(data['stats']['curr_p9']['kills']['value'])+int(data['stats']['curr_p10']['kills']['value'])+int(data['stats']['curr_p2']['kills']['value'])
+            currKills = int(data['stats']['curr_p9']['kills']['value'])+int(data['stats']['curr_p10']['kills']['value'])+int(data['stats']['curr_p2']['kills']['value'])
 
 
             s1 = data['stats']['curr_p2']['matches']['value']
             s2 = data['stats']['curr_p9']['matches']['value']
             s3 = data['stats']['curr_p10']['matches']['value']
-            s4matches = int(s1)+int(s2)+int(s3)
+            currMatches = int(s1)+int(s2)+int(s3)
 
-            s4wins = str(int(data['stats']['curr_p2']['top1']['value'])+int(data['stats']['curr_p9']['top1']['value'])+int(data['stats']['curr_p10']['top1']['value']))
+            currWins = str(int(data['stats']['curr_p2']['top1']['value'])+int(data['stats']['curr_p9']['top1']['value'])+int(data['stats']['curr_p10']['top1']['value']))
 
-            s4winRate =int((int(s4wins)/int(s4matches)) * 100)
+            currWinRate =int((int(currWins)/int(currMatches)) * 100)
 
-            s4kd = round(s4kills/(s4matches-int(s4wins)),2)
-            #vars are winrate,matches,wins,kd
-            #print(str(s4winRate)+'%\n'+str(s4matches)+'\n'+str(s4wins)+'\n'+str(s4kd))
+            currKd = round(currKills/(currMatches-int(currWins)),2)
+            #vars are overallWinrate,matches,overallWins,overallKd
+            #print(str(currWinRate)+'%\n'+str(currMatches)+'\n'+str(currWins)+'\n'+str(currKd))
 
 
+            msg = name.center(37)
+            fir,sec,thrd,frth,fith = '','','','',''
+            cols = [fir,sec,thrd,frth,fith]
+            cols[0] = 'Overall:'.center(0) + 'Current:'.rjust(33)
+            cols[1] = ('kd: '+overallKd).center(0)+('kd: '+str(currKd)).rjust(35)
+            cols[2]= ('wins: '+overallWins).center(0)+('wins: '+str(currWins)).rjust(32)
+            cols[3]= ('matches: '+overallMatchesPlayed).center(0)+('matches: '+str(currMatches)).rjust(26)
+            cols[4]= ('winrate: ' +overallWinrate+'%').center(0)+('winrate: '+str(currWinRate)+'%').rjust(29)
+            for i in range(len(cols)):
+                msg+='\n'+cols[i]
 
-            msg = name+"\nOverall:\t\t\t\t Current:\nkd: "+kd+"\t\t\t\t kd: "+str(s4kd)+"\nwins: "+wins+"\t\t\t\t wins:"+str(s4wins)+"\nmatches: "+matchesPlayed+'\t\tmatches: '+ str(s4matches)+'\nwinrate: '+winrate+'%\t\t winrate: ' +str(s4winRate)+'%'
 
-            kd = float(kd)
+            currKd = float(currKd)
 
-            if (kd) < 1.0:
+            if (currKd) <= 1.0:
                 msg+= '\nstatus: no skin'
-            elif (kd) > 1.0 and kd<2.0:
-                msg+= '\nstatus: regular shmuck'
-            elif (kd) > 2.0 and kd <3.0:
-                msg+= '\nstatus: dark knight'
-            elif (kd) > 3.0:
-                msg+='\nstatus: streamer'
+            elif (currKd) >= 1.0 and currKd<=2.0:
+                msg+= '\nstatus: Rust Lord'
+            elif (currKd) >= 2.0 and currKd <=3.0:
+                msg+= '\nstatus: Dark Knight'
+            elif (currKd) >= 3.0:
+                msg+='\nstatus: Streamer'
             else:
-                msg+= '\nstatus: no idea'
+                msg+= '\nstatus: no idea ask Ryan'
 
 
         except:
-            msg = 'Failed, make sure name is spelled right'
+            msg = 'Failed to retrieve'
         await client.send_message(message.channel,msg)
 
 
