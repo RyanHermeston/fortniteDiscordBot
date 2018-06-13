@@ -64,10 +64,10 @@ async def on_message(message):
             fir,sec,thrd,frth,fith = '','','','',''
             cols = [fir,sec,thrd,frth,fith]
             cols[0] = 'Overall:'.center(0) + 'Current:'.rjust(33)
-            cols[1] = ('kd: '+overallKd).center(0)+('kd: '+str(currKd)).rjust(35)
-            cols[2]= ('wins: '+overallWins).center(0)+('wins: '+str(currWins)).rjust(32)
-            cols[3]= ('matches: '+overallMatchesPlayed).center(0)+('matches: '+str(currMatches)).rjust(26)
-            cols[4]= ('winrate: ' +overallWinrate+'%').center(0)+('winrate: '+str(currWinRate)+'%').rjust(29)
+            cols[1] = ('kd: '+overallKd).center(0)+('kd: '+str(currKd)).center(60)
+            cols[2]= ('wins: '+overallWins).center(0)+('wins: '+str(currWins)).center(53)
+            cols[3]= ('matches: '+overallMatchesPlayed).center(0)+('matches: '+str(currMatches)).center(39)
+            cols[4]= ('winrate: ' +overallWinrate+'%').center(0)+('winrate: '+str(currWinRate)+'%').center(50)
             for i in range(len(cols)):
                 msg+='\n'+cols[i]
 
