@@ -39,7 +39,7 @@ async def on_message(message):
             kd = data['lifeTimeStats'][11]['value']
             wins = data['lifeTimeStats'][8]['value']
             matchesPlayed = data['lifeTimeStats'][7]['value']
-            winrate = int(wins)/int(matchesPlayed)
+            winrate = int(wins)/int(matchesPlayed)*100
             winrate=  str(int(winrate))
             #overall data above, current below, quick and dirty but is close to accurate
 
