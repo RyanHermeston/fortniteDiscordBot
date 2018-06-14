@@ -22,9 +22,10 @@ async def on_message(message):
     if message.content.startswith(commands[0]):
 
         msg = '''This bot is still under construction.\n
-        Current Usage is: !stats, !help, and !winlist\n
+        Current Usage is: !stats, !help, !kdlist and !winlist\n
         !stats `gamertag`
         !winlist `gamertag`,`gamertag',`gamertag`
+        !kdlist `gamertag`,`gamertag`,`gamertag`
         Message @ryan.h for info
         '''
 
