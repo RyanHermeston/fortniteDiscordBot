@@ -22,10 +22,10 @@ async def on_message(message):
     if message.content.startswith(commands[0]):
 
         msg = '''This bot is still under construction.\n
-        Current Usage is: !stats, !help, !kdlist and !winlist\n
-        !stats `gamertag`
-        !winlist `gamertag`,`gamertag',`gamertag`
-        !kdlist `gamertag`,`gamertag`,`gamertag`
+        Usage: !stats, !help, !kdlist and !winlist\n
+        !stats `gamertag`\n
+        !winlist `gamertag`,`gamertag`,`gamertag`\n
+        !kdlist `gamertag`,`gamertag`,`gamertag`\n
         Message @ryan.h for info
         '''
 
@@ -33,10 +33,16 @@ async def on_message(message):
     if message.content.split()[0]==commands[1]:
 
         name = ''
+        '''
         for i in range(len(message.content.split())):
             if i == 0:
                 continue
             name+=message.content.split()[i]+" "
+        '''
+        #name should be extraced differently, above method is trash
+        #the data given is a string so we could just slice from the command length to end of string
+        name+=message.content[len(commands[1])+1:]
+        #this way of handling names is cleaner to read and elmininates an uneccesary for loop
 
         URL = "https://api.fortnitetracker.com/v1/profile/pc/"+name
         try:
@@ -123,7 +129,11 @@ async def on_message(message):
 
     if message.content.split()[0]==commands[2]:
         name,msg,delim = '','',','
+        namechunk = ''
         urls,wins=[],[]
+        snames = []
+        fnames = []
+        splitnames,finalnames=  [],[]
         winDic ={}
         ustr = "https://api.fortnitetracker.com/v1/profile/pc/"
         skip = message.content[0:8]
@@ -133,8 +143,25 @@ async def on_message(message):
             await client.send_message(message.channel,msg)
             return
         else:
-            names = message.content[9:].split(',')
+            names = message.content[len(message.content.split()[0])+1:].split(',')
             for i in names:
+                snames.append(i.split())
+            for i in snames:
+                if len(i)>1:
+                    for j in range(len(i)-1):
+                        i[j]+=' '
+            for i in snames:
+                if len(i)>1:
+                    namechunk = ''
+                    for j in i:
+                        namechunk+=j
+                    fnames.append(namechunk)
+                else:
+                    namechunk = ''
+                    for j in i:
+                        namechunk+=j
+                    fnames.append(namechunk)
+            for i in fnames:
 
                 urls.append(ustr+i)
 
@@ -148,7 +175,7 @@ async def on_message(message):
                 wins.append('N/A')
 
         for i in range(len(wins)):
-            winDic[names[i]]=wins[i]
+            winDic[fnames[i]]=wins[i]
         #sorts by second item of dict, which is value, first is key
         soDict = sorted(winDic.items(),key= lambda dic: (int(dic[1])),reverse = True)
         #sorted returns a list, reason for no .items() after newly sorted
@@ -173,6 +200,8 @@ async def on_message(message):
     if message.content.split()[0]==commands[3]:
         name,msg,delim = '','',','
         urls,kds=[],[]
+        snames,fnames = [],[]
+        namechunk = ''
         kdDic = {}
         ustr = "https://api.fortnitetracker.com/v1/profile/pc/"
         skip = message.content[0:8]
@@ -184,6 +213,24 @@ async def on_message(message):
         else:
             names = message.content[len(message.content.split()[0])+1:].split(',')
             for i in names:
+                snames.append(i.split())
+            for i in snames:
+                if len(i)>1:
+                    for j in range(len(i)-1):
+                        i[j]+=' '
+            for i in snames:
+                if len(i)>1:
+                    namechunk = ''
+                    for j in i:
+                        namechunk+=j
+                    fnames.append(namechunk)
+                else:
+                    namechunk = ''
+                    for j in i:
+                        namechunk+=j
+                    fnames.append(namechunk)
+
+            for i in fnames:
 
                 urls.append(ustr+i)
 
@@ -200,7 +247,7 @@ async def on_message(message):
         #    msg+=str(names[i]+': '+kds[i]+'\n')
 
         for i in range(len(kds)):
-            kdDic[names[i]]=kds[i]
+            kdDic[fnames[i]]=kds[i]
         #sorts by second item of dict, which is value, first is key
         #for k,v in sorted(kdDic.items(),key= lambda x: (float(x[1])),reverse = True):
         #    msg+=k+': '+v+'\n'
