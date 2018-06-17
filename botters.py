@@ -22,6 +22,7 @@ async def on_message(message):
     if message.content.startswith(commands[0]):
 
         msg = '''This bot is still under construction.\n
+        Currently pc players only\n
         Usage: !stats, !help, !kdlist and !winlist\n
         !stats `gamertag`\n
         !winlist `gamertag`,`gamertag`,`gamertag`\n
