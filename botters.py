@@ -136,32 +136,8 @@ async def on_message(message):
                 msg+='\n'+cols[i]
 
             #CURRENT FORMAT
-            '''
-            wsg = ''
-            coals = ['','','','','']
-            coals[0] ='Overall:','Current:'
-            coals[1]='kd: '+str(overallKd) , 'kd: '+str(currKd)
-            coals[2]='wins: '+str(overallWins),'wins: '+str(currWins)
-            coals[3]='matches:'+str(overallMatchesPlayed),'matches:'+str(currMatches)
-            coals[4]='winrate: '+str(overallWinrate)+'%','winrate: '+str(currWinRate)+'%'
-            col_width = max(len(word) for row in coals for word in row)+2 # padding
 
-            for row in coals:
-                wsg+= ("".join(word.ljust(col_width) for word in row))+'\n'
 
-            msg+=wsg
-            '''
-
-            '''
-            RETIRED
-            overList = [overallKd,overallWins,overallMatchesPlayed,overallWinrate+'%',]
-            currList = ['\t'+str(currKd),'\t'+str(currWins),str(currMatches),str(currWinRate)+'%',]
-
-            descList = ['kd:  ','wins:','matches:','winrate:']
-            msg+='Overall:\t\t\t' + 'Current:'+'\n'
-            for e,i,j in zip(descList,overList,currList):
-                msg +=('{} {} \t\t\t{}'.format(e,i,j))+'\n'
-            '''
             currKd = float(currKd)
 
             if (currKd) <= 1.0:
