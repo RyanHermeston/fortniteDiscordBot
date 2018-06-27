@@ -38,13 +38,8 @@ async def on_message(message):
     if message.content.split()[0]==commands[1]:
 
         name = ''
-        '''
-        for i in range(len(message.content.split())):
-            if i == 0:
-                continue
-            name+=message.content.split()[i]+" "
-        '''
-        #name should be extraced differently, above method is trash
+
+        #using string slices to grab name
         #the data given is a string so we could just slice from the command length to end of string
         name+=message.content[len(commands[1])+1:]
         #this way of handling names is cleaner to read and elmininates an uneccesary for loop
@@ -298,12 +293,7 @@ async def on_message(message):
     if message.content.split()[0]==commands[4]:
 
         name = ''
-        '''
-        for i in range(len(message.content.split())):
-            if i == 0:
-                continue
-            name+=message.content.split()[i]+" "
-        '''
+
         #name should be extraced differently, above method is trash
         #the data given is a string so we could just slice from the command length to end of string
         name+=message.content[len(commands[4])+1:]
@@ -416,14 +406,7 @@ async def on_message(message):
         await client.send_message(message.channel,msg)
     if message.content.split()[0]==commands[5]:
         name = ''
-        '''
-        for i in range(len(message.content.split())):
-            if i == 0:
-                continue
-            name+=message.content.split()[i]+" "
-        '''
-        #name should be extraced differently, above method is trash
-        #the data given is a string so we could just slice from the command length to end of string
+        
         name+=message.content[len(commands[5])+1:]
         #this way of handling names is cleaner to read and elmininates an uneccesary for loop
 
