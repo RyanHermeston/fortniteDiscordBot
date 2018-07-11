@@ -11,6 +11,7 @@ TOKEN = 'XXXXXXXXXX'
 key = {'TRN-Api-Key':"XXXXXXXXXXX"}
 
 
+
 client = discord.Client()
 
 commands = ['!help','!stats','!winlist','!kdlist','!statsxb','!statsps']
@@ -22,7 +23,6 @@ async def on_message(message):
     if message.content.startswith(commands[0]):
 
         msg = '''
-
         This bot is still under construction.\n
         Usage: !stats, !help, !kdlist and !winlist\n
         !stats `gamertag`   --- gives pc stats\n
@@ -31,14 +31,12 @@ async def on_message(message):
         !statsxb `gamertag`  --- xbox stats\n
         !statsps `gamertag`  --- psn stats\n
         Message @ryan.h for info
-
         '''
 
         await client.send_message(message.channel,msg)
     if message.content.split()[0]==commands[1]:
 
         name = ''
-
         #using string slices to grab name
         #the data given is a string so we could just slice from the command length to end of string
         name+=message.content[len(commands[1])+1:]
@@ -49,20 +47,21 @@ async def on_message(message):
             r = requests.get(url = URL,headers=key)
             data = r.json()
 
-
+            #retrieves lifetime(overall) data
             overallKd = data['lifeTimeStats'][11]['value']
             overallWins = data['lifeTimeStats'][8]['value']
             overallMatchesPlayed = data['lifeTimeStats'][7]['value']
             overallWinrate = round(int(overallWins)/int(overallMatchesPlayed)*100,2)
             overallWinrate=  str(overallWinrate)
+        #if lifetime data doesnt exist, they've never played
         except:
             msg = 'Failed to gather any stats for '+name
             await client.send_message(message.channel,msg)
             return
             #overall data above, current below, quick and dirty but is close to accurate
         try:
-            currKills = int(data['stats']['curr_p9']['kills']['value'])+int(data['stats']['curr_p10']['kills']['value'])+int(data['stats']['curr_p2']['kills']['value'])
 
+            currKills = int(data['stats']['curr_p9']['kills']['value'])+int(data['stats']['curr_p10']['kills']['value'])+int(data['stats']['curr_p2']['kills']['value'])
 
             s1 = data['stats']['curr_p2']['matches']['value']
             s2 = data['stats']['curr_p9']['matches']['value']
@@ -77,8 +76,7 @@ async def on_message(message):
             #vars are overallWinrate,matches,overallWins,overallKd
             #print(str(currWinRate)+'%\n'+str(currMatches)+'\n'+str(currWins)+'\n'+str(currKd))
         except:
-
-            msg = 'rare/new player info incomplete\n'+name+'\n'
+            msg = ''+name+'\n--------------\nOverall:\n'
 
             msg+="kd: "+overallKd+'\n'+"wins: "+overallWins+'\n'+"matches: "+overallMatchesPlayed+'\n'+"winrate: "+overallWinrate+"%\n--------------\n"
 
@@ -94,28 +92,47 @@ async def on_message(message):
 
                 kd3= round(k3/(matches3-int(w3)),2)
 
-                msg+="kd: "+str(kd3)+'\n'+"wins: "+str(w3)+'\n'+"matches: "+str(matches3)+'\n'+"winrate: "+str(wr3)+"%\n--------------\n"
+                msg+="Current:\nkd: "+str(kd3)+'\n'+"wins: "+str(w3)+'\n'+"matches: "+str(matches3)+'\n'+"winrate: "+str(wr3)+"%\n--------------\nright here mofo"
+                await client.send_message(message.channel,msg)
+                return
             except:
+                try:
 
-                m2=data['stats']['curr_p9']['matches']['value']
+                    m2=int(data['stats']['curr_p9']['matches']['value'])+int(data['stats']['curr_p10']['matches']['value'])
 
-                k2=data['stats']['curr_p9']['kills']['value']
+                    k2=int(data['stats']['curr_p9']['kills']['value'])+int(data['stats']['curr_p10']['kills']['value'])
 
-                w2=data['stats']['curr_p9']['top1']['value']
+                    w2=int(data['stats']['curr_p9']['top1']['value'])+int(data['stats']['curr_p10']['top1']['value'])
 
-                wr2 =int(round(((int(w2)/int(m2)) * 100),0))
+                    wr2 =int(round(((int(w2)/int(m2)) * 100),0))
 
-                kd2 = round(int(k2)/(int(m2)-int(w2)),2)
+                    kd2 = round(int(k2)/(int(m2)-int(w2)),2)
 
-                msg+="kd: "+str(kd2)+'\n'+"wins: "+str(w2)+'\n'+"matches: "+str(m2)+'\n'+"winrate: "+str(wr2)+"%\n--------------\n"
+                    msg+="Current:\nkd: "+str(kd2)+'\n'+"wins: "+str(w2)+'\n'+"matches: "+str(m2)+'\n'+"winrate: "+str(wr2)+"%\n--------------\n"
+                    await client.send_message(message.channel,msg)
+                    return
+                except:
+                    try:
+                        m2=int(data['stats']['curr_p9']['matches']['value'])
 
-            await client.send_message(message.channel,msg)
-            return
+                        k2=int(data['stats']['curr_p9']['kills']['value'])
+
+                        w2=int(data['stats']['curr_p9']['top1']['value'])
+
+                        wr2 =int(round(((int(w2)/int(m2)) * 100),0))
+
+                        kd2 = round(int(k2)/(int(m2)-int(w2)),2)
+
+                        msg+="Current:\nkd: "+str(kd2)+'\n'+"wins: "+str(w2)+'\n'+"matches: "+str(m2)+'\n'+"winrate: "+str(wr2)+"%\n--------------\n"
+                        await client.send_message(message.channel,msg)
+                        return
+                    except:
+                        msg+="\nno current season data\n"
+
+                    await client.send_message(message.channel,msg)
+                    return
 
         try:
-
-
-
 
             msg = name+'\n'
 
@@ -332,11 +349,9 @@ async def on_message(message):
             #vars are overallWinrate,matches,overallWins,overallKd
             #print(str(currWinRate)+'%\n'+str(currMatches)+'\n'+str(currWins)+'\n'+str(currKd))
         except:
-            msg = 'incomplete stats\n '+name
-            msg+=' \n'
-            msg+="kd: "+overallKd+'\n'+"wins: "+overallWins+'\n'+"matches: "+overallMatchesPlayed+'\n'+"winrate: "+overallWinrate+"%\n"
+            msg = ''+name+'\n--------------\nOverall:\n'
 
-
+            msg+="kd: "+overallKd+'\n'+"wins: "+overallWins+'\n'+"matches: "+overallMatchesPlayed+'\n'+"winrate: "+overallWinrate+"%\n--------------\n"
 
             try:
 
@@ -350,22 +365,45 @@ async def on_message(message):
 
                 kd3= round(k3/(matches3-int(w3)),2)
 
-                msg+="kd: "+str(kd3)+'\n'+"wins: "+str(w3)+'\n'+"matches: "+str(matches3)+'\n'+"winrate: "+str(wr3)+"%\n--------------\n"
+                msg+="Current:\nkd: "+str(kd3)+'\n'+"wins: "+str(w3)+'\n'+"matches: "+str(matches3)+'\n'+"winrate: "+str(wr3)+"%\n--------------\nright here mofo"
+                await client.send_message(message.channel,msg)
+                return
             except:
+                try:
 
-                m2=data['stats']['curr_p9']['matches']['value']
+                    m2=int(data['stats']['curr_p9']['matches']['value'])+int(data['stats']['curr_p10']['matches']['value'])
 
-                k2=data['stats']['curr_p9']['kills']['value']
+                    k2=int(data['stats']['curr_p9']['kills']['value'])+int(data['stats']['curr_p10']['kills']['value'])
 
-                w2=data['stats']['curr_p9']['top1']['value']
+                    w2=int(data['stats']['curr_p9']['top1']['value'])+int(data['stats']['curr_p10']['top1']['value'])
 
-                wr2 =int(round(((int(w2)/int(m2)) * 100),0))
+                    wr2 =int(round(((int(w2)/int(m2)) * 100),0))
 
-                kd2 = round(int(k2)/(int(m2)-int(w2)),2)
+                    kd2 = round(int(k2)/(int(m2)-int(w2)),2)
 
-                msg+="kd: "+str(kd2)+'\n'+"wins: "+str(w2)+'\n'+"matches: "+str(m2)+'\n'+"winrate: "+str(wr2)+"%\n--------------\n"
-            await client.send_message(message.channel,msg)
-            return
+                    msg+="Current:\nkd: "+str(kd2)+'\n'+"wins: "+str(w2)+'\n'+"matches: "+str(m2)+'\n'+"winrate: "+str(wr2)+"%\n--------------\n"
+                    await client.send_message(message.channel,msg)
+                    return
+                except:
+                    try:
+                        m2=int(data['stats']['curr_p9']['matches']['value'])
+
+                        k2=int(data['stats']['curr_p9']['kills']['value'])
+
+                        w2=int(data['stats']['curr_p9']['top1']['value'])
+
+                        wr2 =int(round(((int(w2)/int(m2)) * 100),0))
+
+                        kd2 = round(int(k2)/(int(m2)-int(w2)),2)
+
+                        msg+="Current:\nkd: "+str(kd2)+'\n'+"wins: "+str(w2)+'\n'+"matches: "+str(m2)+'\n'+"winrate: "+str(wr2)+"%\n--------------\n"
+                        await client.send_message(message.channel,msg)
+                        return
+                    except:
+                        msg+="\nno current season data\n"
+
+                    await client.send_message(message.channel,msg)
+                    return
 
         try:
 
@@ -406,7 +444,7 @@ async def on_message(message):
         await client.send_message(message.channel,msg)
     if message.content.split()[0]==commands[5]:
         name = ''
-        
+
         name+=message.content[len(commands[5])+1:]
         #this way of handling names is cleaner to read and elmininates an uneccesary for loop
 
@@ -443,9 +481,9 @@ async def on_message(message):
             #vars are overallWinrate,matches,overallWins,overallKd
             #print(str(currWinRate)+'%\n'+str(currMatches)+'\n'+str(currWins)+'\n'+str(currKd))
         except:
-            msg = 'incomplete stats\n '+name
-            msg+='\n'
-            msg+="kd: "+overallKd+'\n'+"wins: "+overallWins+'\n'+"matches: "+overallMatchesPlayed+'\n'+"winrate: "+overallWinrate+"%"
+            msg = ''+name+'\n--------------\nOverall:\n'
+
+            msg+="kd: "+overallKd+'\n'+"wins: "+overallWins+'\n'+"matches: "+overallMatchesPlayed+'\n'+"winrate: "+overallWinrate+"%\n--------------\n"
 
             try:
 
@@ -459,23 +497,45 @@ async def on_message(message):
 
                 kd3= round(k3/(matches3-int(w3)),2)
 
-                msg+="kd: "+str(kd3)+'\n'+"wins: "+str(w3)+'\n'+"matches: "+str(matches3)+'\n'+"winrate: "+str(wr3)+"%\n--------------\n"
+                msg+="Current:\nkd: "+str(kd3)+'\n'+"wins: "+str(w3)+'\n'+"matches: "+str(matches3)+'\n'+"winrate: "+str(wr3)+"%\n--------------\nright here mofo"
+                await client.send_message(message.channel,msg)
+                return
             except:
+                try:
 
-                m2=data['stats']['curr_p9']['matches']['value']
+                    m2=int(data['stats']['curr_p9']['matches']['value'])+int(data['stats']['curr_p10']['matches']['value'])
 
-                k2=data['stats']['curr_p9']['kills']['value']
+                    k2=int(data['stats']['curr_p9']['kills']['value'])+int(data['stats']['curr_p10']['kills']['value'])
 
-                w2=data['stats']['curr_p9']['top1']['value']
+                    w2=int(data['stats']['curr_p9']['top1']['value'])+int(data['stats']['curr_p10']['top1']['value'])
 
-                wr2 =int(round(((int(w2)/int(m2)) * 100),0))
+                    wr2 =int(round(((int(w2)/int(m2)) * 100),0))
 
-                kd2 = round(int(k2)/(int(m2)-int(w2)),2)
+                    kd2 = round(int(k2)/(int(m2)-int(w2)),2)
 
-                msg+="kd: "+str(kd2)+'\n'+"wins: "+str(w2)+'\n'+"matches: "+str(m2)+'\n'+"winrate: "+str(wr2)+"%\n--------------\n"
+                    msg+="Current:\nkd: "+str(kd2)+'\n'+"wins: "+str(w2)+'\n'+"matches: "+str(m2)+'\n'+"winrate: "+str(wr2)+"%\n--------------\n"
+                    await client.send_message(message.channel,msg)
+                    return
+                except:
+                    try:
+                        m2=int(data['stats']['curr_p9']['matches']['value'])
 
-            await client.send_message(message.channel,msg)
-            return
+                        k2=int(data['stats']['curr_p9']['kills']['value'])
+
+                        w2=int(data['stats']['curr_p9']['top1']['value'])
+
+                        wr2 =int(round(((int(w2)/int(m2)) * 100),0))
+
+                        kd2 = round(int(k2)/(int(m2)-int(w2)),2)
+
+                        msg+="Current:\nkd: "+str(kd2)+'\n'+"wins: "+str(w2)+'\n'+"matches: "+str(m2)+'\n'+"winrate: "+str(wr2)+"%\n--------------\n"
+                        await client.send_message(message.channel,msg)
+                        return
+                    except:
+                        msg+="\nno current season data\n"
+
+                    await client.send_message(message.channel,msg)
+                    return
 
         try:
 
