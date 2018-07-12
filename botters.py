@@ -11,7 +11,6 @@ TOKEN = 'XXXXXXXXXX'
 key = {'TRN-Api-Key':"XXXXXXXXXXX"}
 
 
-
 client = discord.Client()
 
 commands = ['!help','!stats','!winlist','!kdlist','!statsxb','!statsps']
@@ -34,7 +33,7 @@ async def on_message(message):
         '''
 
         await client.send_message(message.channel,msg)
-    if message.content.split()[0]==commands[1]:
+    if message.content.startswith(commands[1]) and len(message.content.split()[0])==len(commands[1]):
 
         name = ''
         #using string slices to grab name
@@ -168,7 +167,7 @@ async def on_message(message):
             msg = 'Failed during msg creation'
         await client.send_message(message.channel,msg)
 
-    if message.content.split()[0]==commands[2]:
+    if message.content.startswith(commands[2]) and len(message.content.split()[0]) == len(commands[2]):
         name,msg,delim = '','',','
         namechunk = ''
         urls,wins=[],[]
@@ -238,7 +237,7 @@ async def on_message(message):
         await client.send_message(message.channel,msg)
 
 
-    if message.content.split()[0]==commands[3]:
+    if message.content.startswith(commands[3]) and len(message.content.split()[0])==len(commands[3]):
         name,msg,delim = '','',','
         urls,kds=[],[]
         snames,fnames = [],[]
@@ -307,13 +306,13 @@ async def on_message(message):
         await client.send_message(message.channel,msg)
 
 
-    if message.content.split()[0]==commands[4]:
+    if message.content.startswith(commands[4]) and len(commands[4])==len(message.content.split()[0]):
 
         name = ''
 
         #name should be extraced differently, above method is trash
         #the data given is a string so we could just slice from the command length to end of string
-        name+=message.content[len(commands[4])+1:]
+        name+=message.content[(len(commands[4]))+1:]
         #this way of handling names is cleaner to read and elmininates an uneccesary for loop
 
         URL = "https://api.fortnitetracker.com/v1/profile/xbox/"+name
@@ -442,7 +441,7 @@ async def on_message(message):
         except:
             msg = 'Failed during msg creation'
         await client.send_message(message.channel,msg)
-    if message.content.split()[0]==commands[5]:
+    if message.content.startswith(commands[5]) and len(message.content.split()[0])==len(commands[5]):
         name = ''
 
         name+=message.content[len(commands[5])+1:]
